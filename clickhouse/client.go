@@ -22,8 +22,8 @@ type ClientConfig struct {
 	ConnMaxIdleTime int
 }
 
-// NewClient ...
-func NewClient(config *ClientConfig) *sql.DB {
+// NewConnection ...
+func NewConnection(config *ClientConfig) *dbr.Connection {
 	dsn := fmt.Sprintf("http://%s:%s@%s:%d/%s",
 		config.User,
 		config.Password,
@@ -39,5 +39,10 @@ func NewClient(config *ClientConfig) *sql.DB {
 	conn.SetMaxOpenConns(config.MaxOpenConns)
 	conn.SetConnMaxLifetime(time.Duration(config.ConnMaxLifetime) * time.Minute)
 	conn.SetConnMaxIdleTime(time.Duration(config.ConnMaxIdleTime) * time.Minute)
-	return conn.DB
+	return conn
+}
+
+// NewClient ...
+func NewClient(config *ClientConfig) *sql.DB {
+	return NewConnection(config).DB
 }
