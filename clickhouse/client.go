@@ -39,6 +39,9 @@ func NewConnection(config *ClientConfig) *dbr.Connection {
 	conn.SetMaxOpenConns(config.MaxOpenConns)
 	conn.SetConnMaxLifetime(time.Duration(config.ConnMaxLifetime) * time.Minute)
 	conn.SetConnMaxIdleTime(time.Duration(config.ConnMaxIdleTime) * time.Minute)
+	if err = conn.Ping(); err != nil {
+		panic(err)
+	}
 	return conn
 }
 
