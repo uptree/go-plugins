@@ -3,7 +3,7 @@ package utils
 import (
 	"bytes"
 	"errors"
-	"io/ioutil"
+	"io"
 
 	jsoniter "github.com/json-iterator/go"
 	"golang.org/x/text/encoding/simplifiedchinese"
@@ -44,7 +44,7 @@ func StructToStruct(a interface{}, b interface{}) (interface{}, error) {
 // GbkToUtf8 转码
 func GbkToUtf8(s []byte) ([]byte, error) {
 	reader := transform.NewReader(bytes.NewReader(s), simplifiedchinese.GBK.NewDecoder())
-	d, e := ioutil.ReadAll(reader)
+	d, e := io.ReadAll(reader)
 	if e != nil {
 		return nil, e
 	}
@@ -54,7 +54,7 @@ func GbkToUtf8(s []byte) ([]byte, error) {
 // Utf8ToGbk 转码
 func Utf8ToGbk(s []byte) ([]byte, error) {
 	reader := transform.NewReader(bytes.NewReader(s), simplifiedchinese.GBK.NewEncoder())
-	d, e := ioutil.ReadAll(reader)
+	d, e := io.ReadAll(reader)
 	if e != nil {
 		return nil, e
 	}
