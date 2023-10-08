@@ -13,12 +13,16 @@ require (
 	github.com/mattn/go-sqlite3 v1.14.16 // indirect
 	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646
 	github.com/olivere/elastic/v7 v7.0.32
+	github.com/onsi/ginkgo/v2 v2.1.3 // indirect
 	github.com/pkg/errors v0.9.1
 	github.com/spf13/viper v1.15.0
+	github.com/stretchr/testify v1.8.2 // indirect
 	github.com/tuotoo/qrcode v0.0.0-20220425170535-52ccc2bebf5d
+	golang.org/x/net v0.7.0 // indirect
+	golang.org/x/sys v0.6.0 // indirect
 	golang.org/x/text v0.7.0
 	gopkg.in/DATA-DOG/go-sqlmock.v1 v1.3.0 // indirect
-	gorm.io/driver/clickhouse v0.5.1
+	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 	gorm.io/driver/mysql v1.5.1
 	gorm.io/gorm v1.25.1
 )
