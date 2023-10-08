@@ -28,14 +28,13 @@ type ClientConfig struct {
 
 // NewClient ...
 func NewClient(ctx context.Context, config *ClientConfig) (*gorm.DB, error) {
-	dsn := fmt.Sprintf("clickhouse://%s:%s@%s:%d/%s?dial_timeout=%s&max_execution_time=%d",
+	dsn := fmt.Sprintf("clickhouse://%s:%s@%s:%d/%s?dial_timeout=%s",
 		config.User,
 		config.Password,
 		config.Host,
 		config.Port,
 		config.DBName,
 		config.Timeout,
-		config.MaxIdleConns,
 	)
 	db, err := gorm.Open(clickhouse.Open(dsn), &gorm.Config{})
 	if err != nil {
@@ -48,7 +47,9 @@ func NewClient(ctx context.Context, config *ClientConfig) (*gorm.DB, error) {
 	sqlDB.SetMaxIdleConns(config.MaxIdleConns)
 	sqlDB.SetMaxOpenConns(config.MaxOpenConns)
 	connMaxLifetime := time.Duration(config.ConnMaxLifetime)
+	connMaxIdleTime := time.Duration(config.ConnMaxIdleTime)
 	sqlDB.SetConnMaxLifetime(connMaxLifetime * time.Minute)
+	sqlDB.SetConnMaxIdleTime(connMaxIdleTime * time.Minute)
 	err = sqlDB.PingContext(ctx)
 	if err != nil {
 		return nil, errors.WithStack(err)
