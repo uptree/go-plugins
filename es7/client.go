@@ -2,13 +2,12 @@ package es7
 
 import (
 	"context"
+	"github.com/olivere/elastic/v7"
+	"github.com/pkg/errors"
 	"io"
 	"log"
 	"net/http"
 	"os"
-
-	"github.com/olivere/elastic/v7"
-	"github.com/pkg/errors"
 )
 
 // ClientConfig ...
@@ -17,6 +16,7 @@ type ClientConfig struct {
 	Username string
 	Password string
 	LogFile  io.Writer
+	LogLevel string
 }
 
 // ElasticV7Doer ...
@@ -24,17 +24,32 @@ var ElasticV7Doer elastic.Doer = http.DefaultClient
 
 // NewClient ...
 func NewClient(ctx context.Context, config *ClientConfig) (*elastic.Client, error) {
-	if config.LogFile == nil {
-		config.LogFile = os.Stdout
-	}
-	esClient, err := elastic.NewClient(
+	var elsOpts []elastic.ClientOptionFunc
+	elsOpts = append(elsOpts,
 		elastic.SetSniff(false),
 		elastic.SetURL(config.URL),
 		elastic.SetBasicAuth(config.Username, config.Password),
 		elastic.SetHttpClient(ElasticV7Doer),
-		elastic.SetInfoLog(log.New(config.LogFile, "[ES-INFO]", log.LstdFlags)),
-		elastic.SetErrorLog(log.New(config.LogFile, "[ES-ERROR]", log.LstdFlags)),
 	)
+	if config.LogLevel != "" {
+		if config.LogFile == nil {
+			config.LogFile = os.Stdout
+		}
+		var (
+			errorLog = elastic.SetErrorLog(log.New(config.LogFile, "[ES-ERROR] ", log.LstdFlags))
+			infoLog  = elastic.SetInfoLog(log.New(config.LogFile, "[ES-INFO] ", log.LstdFlags))
+			traceLog = elastic.SetTraceLog(log.New(config.LogFile, "[ES-TRACE] ", log.LstdFlags))
+		)
+		switch config.LogLevel {
+		case "error":
+			elsOpts = append(elsOpts, errorLog)
+		case "info":
+			elsOpts = append(elsOpts, errorLog, infoLog)
+		case "trace":
+			elsOpts = append(elsOpts, errorLog, infoLog, traceLog)
+		}
+	}
+	esClient, err := elastic.NewClient(elsOpts...)
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}
