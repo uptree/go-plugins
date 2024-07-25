@@ -15,6 +15,7 @@ require (
 	github.com/olivere/elastic/v7 v7.0.32
 	github.com/onsi/ginkgo/v2 v2.1.3 // indirect
 	github.com/pkg/errors v0.9.1
+	github.com/speps/go-hashids/v2 v2.0.1
 	github.com/spf13/viper v1.15.0
 	github.com/stretchr/testify v1.8.2 // indirect
 	github.com/tuotoo/qrcode v0.0.0-20220425170535-52ccc2bebf5d
